@@ -1,725 +1,490 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>App Inspección</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>App Inspección Comercial - TOTEM</title>
+
+<style>
+
+/* ================= VARIABLES ================= */
+
+:root{
+--bg:#e5e7eb;
+--card:#ffffff;
+--border:#d1d5db;
+--text:#111827;
+--muted:#6b7280;
+--primary:#1e3a8a;
+--primary-dark:#1e40af;
+--radius:14px;
+}
+
+*{box-sizing:border-box;}
+
+body{
+margin:0;
+font-family:system-ui;
+background:var(--bg);
+}
+
+.container{
+max-width:1200px;
+margin:auto;
+padding:20px;
+}
+
+.card{
+background:var(--card);
+padding:25px;
+border-radius:20px;
+margin-bottom:20px;
+}
+
+/* ================= HEADER ================= */
+
+.top-tabs{
+display:flex;
+gap:10px;
+margin-bottom:15px;
+}
+
+.tab-btn{
+padding:8px 14px;
+border-radius:10px;
+border:1px solid var(--border);
+background:white;
+cursor:pointer;
+}
+
+.tab-btn.active{
+background:var(--primary);
+color:white;
+}
+
+.title{margin:5px 0;}
+.subtitle{color:var(--muted);font-size:14px;}
+
+/* ================= FORM ================= */
+
+.section{
+border:1px solid var(--border);
+padding:20px;
+border-radius:var(--radius);
+background:#f9fafb;
+margin-bottom:20px;
+}
+
+.section-title{
+color:var(--primary);
+margin-bottom:15px;
+font-weight:600;
+}
+
+.grid-2{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;
+}
+
+.grid-3{
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:15px;
+}
+
+.form-group{
+display:flex;
+flex-direction:column;
+gap:6px;
+}
+
+label{
+font-size:13px;
+color:var(--muted);
+}
+
+input,select,textarea{
+padding:10px;
+border-radius:10px;
+border:1px solid var(--border);
+font-size:14px;
+}
+
+textarea{min-height:80px;resize:vertical;}
+
+input:focus,textarea:focus,select:focus{
+border-color:var(--primary);
+box-shadow:0 0 0 2px rgba(30,58,138,0.15);
+outline:none;
+}
+
+.btn-primary{
+background:var(--primary);
+color:white;
+padding:10px 18px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+}
+
+.btn-primary:hover{
+background:var(--primary-dark);
+}
+
+.btn-secondary{
+background:#e5e7eb;
+padding:10px 18px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+}
+
+.form-actions{
+display:flex;
+justify-content:flex-end;
+gap:10px;
+}
+
+/* ================= MODAL GUARDIAS ================= */
+
+.modal{
+display:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.5);
+justify-content:center;
+align-items:center;
+z-index:1000;
+}
+
+.modal-content{
+background:white;
+width:95%;
+max-width:1100px;
+border-radius:20px;
+padding:25px;
+}
+
+.table-guardias{
+width:100%;
+border-collapse:collapse;
+margin-top:15px;
+}
+
+.table-guardias th,
+.table-guardias td{
+border:1px solid var(--border);
+padding:8px;
+text-align:center;
+}
+
+.table-guardias th{
+background:var(--primary);
+color:white;
+}
+
+.totales{
+font-weight:bold;
+background:#f3f4f6;
+}
+
+.modal-actions{
+display:flex;
+justify-content:space-between;
+margin-top:20px;
+}
+
+.resumen{
+margin-top:10px;
+font-size:14px;
+color:var(--muted);
+}
+
+.checkbox-grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:8px;
+}
+
+@media(max-width:900px){
+.grid-2,.grid-3{grid-template-columns:1fr;}
+.checkbox-grid{grid-template-columns:1fr;}
+}
+
+</style>
 </head>
+
 <body>
-<div class="app">
-    <div class="container">
-      <!-- Header -->
-      <header class="header">
-        <div>
-          <div class="badge">
 
-             <div class="top-tabs">
-      <button class="tab-btn active">INFORMACIÓN</button>
-      <button class="tab-btn">LEVANTAMIENTO</button>
-      <button class="tab-btn">DISEÑO / PLANO</button>
-    </div>
+<div class="container">
 
-          </div>
-          <h1 class="title">Levantamiento de información en sitio</h1>
-          <p class="subtitle">
-            Primero elige la <strong>línea de negocio</strong>, luego la <strong>subcategoría</strong> y después baja al detalle del equipo.
-          </p>
-        </div>
-        <div class="header-right">
-          <div>Modo: <strong>Tablet</strong></div>
-                 </div>
-      </header>
-
-      <div class="layout">
-        <!-- Columna izquierda -->
-        <main class="card">
-          <div class="card-header">
-            <div>
-              <h2 class="card-title">Líneas de negocio y subcategorías</h2>
-              <p class="card-subtitle">
-                Segmenta la inspección por línea de negocio: Seguridad electrónica, SCI, IT, Flotas y COM.
-              </p>
-            </div>
-            <span class="small-tag">Clasificación comercial</span>
-          </div>
-
-          <!-- LÍNEAS DE NEGOCIO -->
-          <section class="section">
-            <h3 class="section-title">Líneas de negocio</h3>
-            <div class="pos-grid lineas" id="lineasGrid">
-              <!-- Se llena por JS -->
-            </div>
-          </section>
-
-          <!-- SUBCATEGORÍAS DINÁMICAS -->
-          <section class="section">
-            <h3 class="section-title">Subcategorías / sistemas</h3>
-            <div class="pos-grid" id="posGrid">
-              <!-- Se llena por JS según línea -->
-            </div>
-          </section>
-
-          <!-- DETALLE DEL ÍTEM -->
-          <section class="section">
-            <h3 class="section-title">Detalle del ítem seleccionado</h3>
-
-            <form id="itemForm" novalidate>
-              <!-- Línea + Subcategoría -->
-              <div class="field-row">
-                <div class="field">
-                  <label class="label">
-                    <span>Línea de negocio</span>
-                    <span class="required">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    class="input"
-                    id="lineaNegocio"
-                    readonly
-                    placeholder="Selecciona una línea de negocio"
-                  />
-                  <div class="error-message" data-error-for="lineaNegocio"></div>
-                </div>
-                <div class="field">
-                  <label class="label">
-                    <span>Subcategoría / sistema</span>
-                    <span class="required">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    class="input"
-                    id="categoria"
-                    readonly
-                    placeholder="Selecciona una subcategoría en el POS"
-                  />
-                  <div class="error-message" data-error-for="categoria"></div>
-                </div>
-              </div>
-
-              <!-- Marca + Modelo -->
-              <div class="field-row">
-                <div class="field">
-                  <label class="label">
-                    <span>Marca</span>
-                    <span class="required">*</span>
-                  </label>
-                  <select class="select" id="marca">
-                    <option value="">Selecciona una marca</option>
-                    <option value="Dahua">Dahua</option>
-                    <option value="Hikvision">Hikvision</option>
-                    <option value="Uniview">Uniview</option>
-                    <option value="Ruijie">Ruijie</option>
-                    <option value="APC">APC</option>
-                    <option value="Tripplite">Tripplite</option>
-                    <option value="Bosch">Bosch</option>
-                    <option value="Otra">Otra / Genérica</option>
-                  </select>
-                  <div class="error-message" data-error-for="marca"></div>
-                </div>
-
-                <div class="field">
-                  <label class="label">
-                    <span>Modelo</span>
-                    <span class="required">*</span>
-                  </label>
-                  <div style="display:flex; gap:6px;">
-                    <select class="select" id="modelo">
-                      <option value="">Selecciona un modelo</option>
-                    </select>
-                    <button
-                      type="button"
-                      class="btn btn-soft"
-                      id="btnModelosModal"
-                      title="Buscar modelo por tipo / marca / categoría"
-                    >
-                      🔍
-                    </button>
-                  </div>
-                  <div class="error-message" data-error-for="modelo"></div>
-                  <p class="hint">
-                    El botón 🔍 abre un catálogo gráfico según la categoría técnica (CCTV, Energía, Red, etc.).
-                  </p>
-                </div>
-              </div>
-
-              <!-- Condición equipo (solo cámaras) -->
-              <div class="field-row" id="condicionEquipoRow" style="display:none;">
-                <div class="field">
-                  <label class="label">
-                    <span>Condición del equipo (cámaras)</span>
-                  </label>
-                  <select class="select" id="condicionEquipo">
-                    <option value="">Selecciona</option>
-                    <option value="Cliente">Cliente</option>
-                    <option value="Nueva">Nueva</option>
-                    <option value="Reemplazo">Reemplazo</option>
-                  </select>
-                  <div class="error-message" data-error-for="condicionEquipo"></div>
-                  <p class="hint">
-                    Cliente: equipo existente (solo foto y coordenadas). Nueva / Reemplazo: equipo provisto por nosotros.
-                  </p>
-                </div>
-              </div>
-
-              <!-- Subtipo + metros cable -->
-              <div class="field-row">
-                <div class="field">
-                  <label class="label">
-                    <span>Tipo / configuración</span>
-                  </label>
-                  <select class="select" id="subtipo">
-                    <option value="">Selecciona línea y subcategoría primero</option>
-                  </select>
-                  <p class="hint">
-                    Cámaras: domo/bala/PTZ. Energía: UPS/inversor/solar/punto eléctrico. Red: AP/Router/PTP.
-                  </p>
-                </div>
-
-                <div class="field">
-                  <label class="label">
-                    Metros lineales de cable
-                    <span class="required">*</span>
-                  </label>
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.1"
-                    class="input"
-                    id="metrosCable"
-                    placeholder="Ej: 25"
-                  />
-                  <div class="error-message" data-error-for="metrosCable"></div>
-                  <p class="hint">Cableado de baja tensión / datos / video para este punto.</p>
-                </div>
-              </div>
-
-              <!-- Altura + punto eléctrico -->
-              <div class="field-row">
-                <div class="field">
-                  <label class="label">
-                    Altura de instalación
-                    <span class="required">*</span>
-                  </label>
-                  <div class="radio-group" id="alturaGroup">
-                    <label class="radio-pill">
-                      <input type="radio" name="altura" value="<=3m" />
-                      <span>Hasta 3 m</span>
-                    </label>
-                    <label class="radio-pill">
-                      <input type="radio" name="altura" value=">3m" />
-                      <span>Más de 3 m</span>
-                    </label>
-                  </div>
-                  <div class="error-message" data-error-for="altura"></div>
-                </div>
-
-                <div class="field" id="fieldPuntoElectrico" style="display:none;">
-                  <label class="label">
-                    Metros de punto eléctrico (110/220V)
-                  </label>
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.1"
-                    class="input"
-                    id="metrosPuntoElectrico"
-                    placeholder="Ej: 10"
-                  />
-                  <p class="hint">
-                    Solo si el subtipo de energía es <strong>Punto eléctrico</strong>.
-                  </p>
-                </div>
-              </div>
-
-              <!-- Descripción -->
-              <div class="field">
-                <label class="label">Descripción / referencia interna</label>
-                <input
-                  type="text"
-                  class="input"
-                  id="descripcion"
-                  placeholder="Ej: Cámara domo acceso principal, rack 01..."
-                />
-              </div>
-
-              <!-- Accesorios -->
-              <div class="field">
-                <label class="label">
-                  Accesorios para este equipo (opcional)
-                </label>
-                <div class="accessories-grid" id="accesoriosGrid">
-                  <div class="accessory-row">
-                    <label class="accessory-label">
-                      <input type="checkbox" data-acc="Caja NEMA" />
-                      <span>Caja NEMA</span>
-                    </label>
-                    <input
-                      type="number"
-                      min="0"
-                      step="1"
-                      class="input input-compact"
-                      data-acc-qty="Caja NEMA"
-                      placeholder="Cant."
-                    />
-                  </div>
-                  <div class="accessory-row">
-                    <label class="accessory-label">
-                      <input type="checkbox" data-acc="Caja de paso" />
-                      <span>Caja de paso</span>
-                    </label>
-                    <input
-                      type="number"
-                      min="0"
-                      step="1"
-                      class="input input-compact"
-                      data-acc-qty="Caja de paso"
-                      placeholder="Cant."
-                    />
-                  </div>
-                  <div class="accessory-row">
-                    <label class="accessory-label">
-                      <input type="checkbox" data-acc="Brazo pared" />
-                      <span>Brazo de pared</span>
-                    </label>
-                    <input
-                      type="number"
-                      min="0"
-                      step="1"
-                      class="input input-compact"
-                      data-acc-qty="Brazo pared"
-                      placeholder="Cant."
-                    />
-                  </div>
-                  <div class="accessory-row">
-                    <label class="accessory-label">
-                      <input type="checkbox" data-acc="Brazo poste" />
-                      <span>Brazo para poste</span>
-                    </label>
-                    <input
-                      type="number"
-                      min="0"
-                      step="1"
-                      class="input input-compact"
-                      data-acc-qty="Brazo poste"
-                      placeholder="Cant."
-                    />
-                  </div>
-                  <div class="accessory-row">
-                    <label class="accessory-label">
-                      <input type="checkbox" data-acc="Poste metálico" />
-                      <span>Poste metálico</span>
-                    </label>
-                    <input
-                      type="number"
-                      min="0"
-                      step="1"
-                      class="input input-compact"
-                      data-acc-qty="Poste metálico"
-                      placeholder="Cant."
-                    />
-                  </div>
-                  <div class="accessory-row">
-                    <label class="accessory-label">
-                      <input type="checkbox" data-acc="Tubería EMT" />
-                      <span>Tubería EMT (tramos)</span>
-                    </label>
-                    <input
-                      type="number"
-                      min="0"
-                      step="1"
-                      class="input input-compact"
-                      data-acc-qty="Tubería EMT"
-                      placeholder="Cant."
-                    />
-                  </div>
-                  <div class="accessory-row">
-                    <label class="accessory-label">
-                      <input type="checkbox" data-acc="Otros accesorios" />
-                      <span>Otros accesorios</span>
-                    </label>
-                    <input
-                      type="number"
-                      min="0"
-                      step="1"
-                      class="input input-compact"
-                      data-acc-qty="Otros accesorios"
-                      placeholder="Cant."
-                    />
-                  </div>
-                </div>
-                <p class="hint">
-                  Marca solo lo que vas a instalar en este punto. Luego se consolida por tipo de accesorio.
-                </p>
-              </div>
-
-              <!-- Coordenadas -->
-              <div class="field">
-                <label class="label">Coordenadas del punto</label>
-                <div class="coords-row">
-                  <input
-                    type="text"
-                    class="input"
-                    id="latitud"
-                    placeholder="Latitud"
-                  />
-                  <input
-                    type="text"
-                    class="input"
-                    id="longitud"
-                    placeholder="Longitud"
-                  />
-                  <button type="button" class="btn btn-ghost" id="btnCoords">
-                    Tomar coordenada
-                  </button>
-                </div>
-                <p class="hint">
-                  Si el navegador lo permite, se tomará la ubicación GPS del dispositivo.
-                </p>
-              </div>
-
-              <!-- Fotos -->
-              <div class="field">
-                <label class="label">Fotos del punto (máx. 2)</label>
-                <input
-                  type="file"
-                  class="input"
-                  id="fotos"
-                  accept="image/*"
-                  multiple
-                  capture="environment"
-                />
-                <p class="hint">
-                  Toma hasta dos fotos del punto (antes / después o ángulos diferentes).
-                </p>
-              </div>
-
-              <div class="footer-actions">
-                <button type="submit" class="btn btn-primary">
-                  Agregar ítem al listado
-                </button>
-                <button type="button" class="btn btn-ghost" id="limpiarItemBtn">
-                  Limpiar ítem
-                </button>
-              </div>
- <!-- grabacion -->
-              <div class="extra-actions">
-  <button class="btn btn-primary" id="btnGrabacion">
-    Configurar Grabación
-  </button>
- <!-- Punto de fibra -->
-  <button class="btn btn-primary" id="btnFibra">
-  Configurar Fibra Óptica
-</button>
-<button type="button" class="btn btn-soft" id="btnObraCivil">
-  🏗 Obra Civil
-</button>
-<button type="button" class="btn btn-soft" id="btnContenedores">
-  📦 Contenedores / Rack
-</button>
-</div>
-<!-- MODAL CONTENEDORES -->
-<div class="modal-backdrop" id="modalContenedores" style="display:none;">
-  <div class="modal">
-
-    <div class="modal-header">
-      <h2 class="modal-title">Configuración de Contenedores y Rack</h2>
-      <button class="btn btn-ghost" id="cerrarContenedores">Cerrar ✕</button>
-    </div>
-
-    <div class="modal-body">
-
-      <table class="tabla-contenedores">
-        <thead>
-          <tr>
-            <th>Detalle</th>
-            <th>Cantidad</th>
-            <th>Material fabricación</th>
-            <th>Condición</th>
-            <th>Foto</th>
-            <th>Observación</th>
-          </tr>
-        </thead>
-        <tbody id="tablaContenedoresBody"></tbody>
-      </table>
-
-      <div style="margin-top:30px; text-align:center;">
-        <button class="btn btn-primary" id="guardarContenedores"
-          style="padding:12px 32px; border-radius:14px; font-size:14px;">
-          Guardar configuración
-        </button>
-      </div>
-
-    </div>
-
-  </div>
-</div>
-<!-- MODAL OBRA CIVIL -->
-<div class="modal-backdrop" id="modalObraCivil" style="display:none;">
-  <div class="modal">
-
-    <div class="modal-header">
-      <h2 class="modal-title">Configuración de Obra Civil</h2>
-      <button class="btn btn-ghost" id="cerrarObraCivil">Cerrar ✕</button>
-    </div>
-
-    <div class="modal-body">
-
-      <table class="tabla-obra">
-        <thead>
-          <tr>
-            <th>Rubro</th>
-            <th>Cantidad</th>
-            <th>Unidad</th>
-            <th>Observaciones</th>
-          </tr>
-        </thead>
-        <tbody id="tablaObraBody"></tbody>
-      </table>
-
-      <div style="margin-top:30px; text-align:center;">
-        <button class="btn btn-primary" id="guardarObraCivil"
-          style="padding:12px 32px; border-radius:14px; font-size:14px;">
-          Guardar configuración
-        </button>
-      </div>
-
-    </div>
-
-  </div>
-</div>
-<!-- MODAL FIBRA OPTICA -->
-<div class="modal-backdrop" id="modalFibra" style="display:none;">
-  <div class="modal">
-
-    <div class="modal-header">
-      <h2 class="modal-title">Configuración de Fibra Óptica</h2>
-      <button class="btn btn-ghost" id="cerrarFibra">Cerrar ✕</button>
-    </div>
-
-    <div class="modal-body">
-
-      <table class="tabla-fibra">
-        <thead>
-          <tr>
-            <th>Rubros</th>
-            <th>Cantidades</th>
-            <th>Observaciones</th>
-          </tr>
-        </thead>
-        <tbody id="tablaFibraBody"></tbody>
-      </table>
-
-      <div style="margin-top:30px; text-align:center;">
-        <button class="btn btn-primary" id="guardarFibra" style="
-          padding:12px 32px;
-          border-radius:14px;
-          font-size:14px;
-          min-width:220px;">
-          Guardar configuración
-        </button>
-      </div>
-
-    </div>
-
-  </div>
+<div class="top-tabs">
+<button class="tab-btn active">INFORMACIÓN</button>
+<button class="tab-btn">LEVANTAMIENTO</button>
+<button class="tab-btn">DISEÑO / PLANO</button>
 </div>
 
-<!-- MODAL GRABACION AVANZADO -->
-<div class="modal-backdrop" id="modalGrabacion" style="display:none;">
-  <div class="modal">
+<h1 class="title">INFORME INSPECCIÓN COMERCIAL</h1>
+<p class="subtitle">Código: COM-F4.1.2.01</p>
 
-    <div class="modal-header">
-      <h2 class="modal-title">Configuración de Grabación</h2>
-      <button class="btn btn-ghost" id="cerrarGrabacion">Cerrar ✕</button>
-    </div>
+<div class="card">
 
-    <div class="modal-body">
+<!-- ================= INFORMACIÓN GENERAL ================= -->
 
-      <!-- TIPO DE GRABACIÓN -->
-      <div class="field">
-        <label class="label">Tipo de grabación</label>
-        <select id="tipoGrabacion" class="select">
-          <option value="1">Continua 24/7</option>
-          <option value="0.6">Por evento (40% promedio)</option>
-          <option value="0.8">Mixta</option>
-        </select>
-      </div>
-
-      <!-- CONFIGURACION VIDEO -->
-      <div class="field-row">
-        <div class="field">
-          <label class="label">Resolución</label>
-          <select id="resolucion" class="select">
-            <option value="2">2MP</option>
-            <option value="4">4MP</option>
-            <option value="8">8MP</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label class="label">FPS</label>
-          <input type="number" id="fps" class="input" value="15">
-        </div>
-      </div>
-
-      <div class="field-row">
-        <div class="field">
-          <label class="label">Codec</label>
-          <select id="codec" class="select">
-            <option value="1">H.264</option>
-            <option value="0.6">H.265</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label class="label">Días de grabación</label>
-          <input type="number" id="dias" class="input" value="30">
-        </div>
-      </div>
-
-      <!-- ARQUITECTURA -->
-      <div class="field">
-        <label class="label">Arquitectura de almacenamiento</label>
-        <select id="arquitectura" class="select">
-          <option value="">Seleccionar</option>
-          <option value="nvr">NVR</option>
-          <option value="virtual">Servidor Virtual</option>
-          <option value="fisico">Servidor Físico</option>
-        </select>
-      </div>
-
-      <!-- OPCIONES DINÁMICAS -->
-      <div class="field" id="opcionesArquitectura"></div>
-
-      <button class="btn btn-primary" id="calcularStorage">
-        Calcular Storage
-      </button>
-
-      <div class="storage-result" id="resultadoStorage">
-        Resultado aparecerá aquí...
-      </div>
-
-    </div>
-  </div>
+<div class="section">
+<h3 class="section-title">Información General</h3>
+<div class="grid-2">
+<div class="form-group">
+<label>Nombre contacto de obra</label>
+<input type="text">
 </div>
-            </form>
-          </section>
-        </main>
+<div class="form-group">
+<label>Teléfono</label>
+<input type="text">
+</div>
+<div class="form-group">
+<label>Email</label>
+<input type="text">
+</div>
+<div class="form-group">
+<label>Dirección</label>
+<input type="text">
+</div>
+<div class="form-group">
+<label>Coordenadas (Lat / Long)</label>
+<input type="text">
+</div>
+</div>
+</div>
 
-        <!-- Columna derecha -->
-        <aside class="card">
-          <div class="card-header">
-            <div>
-              <h2 class="card-title">Ítems seleccionados</h2>
-              <p class="card-subtitle">
-                Resumen por línea de negocio y subcategoría de la inspección.
-              </p>
-            </div>
-            <span class="status-pill">
-              <span class="status-dot"></span>
-              <span id="statusText">Sin ítems aún</span>
-            </span>
-          </div>
+<!-- ================= REQUISITOS DEL CLIENTE ================= -->
 
-          <div class="items-counter">
-            Ítems agregados: <span id="itemsCount">0</span>
-          </div>
+<div class="section">
+<h3 class="section-title">Requisitos del Cliente</h3>
+<div class="form-group">
+<label>Problema del Cliente</label>
+<textarea></textarea>
+</div>
+<div class="form-group">
+<label>Requisitos del Sistema</label>
+<textarea></textarea>
+</div>
+<div class="form-group">
+<label>Sistema de Grabación Actual</label>
+<textarea></textarea>
+</div>
+</div>
 
-          <div class="items-list" id="itemsList">
-            <p class="summary-text">
-              Aún no has agregado ningún equipo.  
-              Usa la <strong>línea de negocio</strong> + <strong>subcategoría</strong> y luego
-              el botón <strong>“Agregar ítem al listado”</strong>.
-            </p>
-          </div>
+<!-- ================= INTERNET ================= -->
 
-          <div class="divider"></div>
+<div class="section">
+<h3 class="section-title">Proveedor de Internet</h3>
+<div class="grid-3">
+<div class="form-group">
+<label>Proveedor</label>
+<select>
+<option>CNT</option>
+<option>Claro</option>
+<option>Telconet</option>
+<option>Puntonet</option>
+<option>Starlink</option>
+<option>Otro</option>
+</select>
+</div>
+<div class="form-group">
+<label>Velocidad</label>
+<input type="text" placeholder="100 Mbps">
+</div>
+<div class="form-group">
+<label>Tipo IP</label>
+<select>
+<option>Dinámica</option>
+<option>Fija</option>
+</select>
+</div>
+</div>
+</div>
 
-          <div class="footer-actions">
-            <button type="button" class="btn btn-danger-soft" id="vaciarListaBtn">
-              Vaciar listado
-            </button>
-            <button type="button" class="btn btn-primary" id="finalizarBtn">
-              Finalizar selección (demo)
-            </button>
-          </div>
+<!-- ================= CONDICIONES EXTERNAS ================= -->
 
-          <div class="alert" id="alertBox">
-            <strong>Modo demo.</strong> Todos los ítems se almacenan en memoria y se muestran
-            en la consola (F12). Puedes enviar el JSON a tu backend o guardarlo donde necesites.
-          </div>
+<div class="section">
+<h3 class="section-title">Condiciones Externas a la Instalación</h3>
+<div class="checkbox-grid">
+<label><input type="checkbox"> Área techada</label>
+<label><input type="checkbox"> Exposición lluvia</label>
+<label><input type="checkbox"> Zona industrial</label>
+<label><input type="checkbox"> Polvo</label>
+<label><input type="checkbox"> Vibración</label>
+<label><input type="checkbox"> Altura > 3m</label>
+<label><input type="checkbox"> Requiere andamio</label>
+<label><input type="checkbox"> Permiso especial</label>
+</div>
+</div>
 
-          <p class="summary-text" style="margin-top: 10px;">
-            Flujo sugerido:
-            <br />
-            • Paso 1: Entrevista al cliente.  
-            • <strong>Paso 2: POS por línea de negocio (esta pantalla).</strong>  
-            • Paso 3: Checklist técnico y generación de informe.
-          </p>
-        </aside>
-      </div>
-    </div>
-  </div>
+<!-- ================= ESTIMACIÓN ================= -->
 
-  <!-- MODAL MODELOS -->
-  <div class="modal-backdrop" id="modalModelos">
-    <div class="modal">
-      <div class="modal-header">
-        <div>
-          <h2 class="modal-title" id="modalTitle">Seleccionar modelo</h2>
-          <div style="font-size:12px; opacity:0.9;" id="modalSubtitle">
-            Usa los filtros táctiles para encontrar el modelo adecuado. Toca una tarjeta para seleccionarlo.
-          </div>
-        </div>
-        <button type="button" class="btn btn-ghost" id="modalCloseBtn">Cerrar ✕</button>
-      </div>
+<div class="section">
+<h3 class="section-title">Estimación del Tiempo de Instalación</h3>
+<div class="grid-3">
+<div class="form-group">
+<label>Días</label>
+<input type="number">
+</div>
+<div class="form-group">
+<label>Técnicos</label>
+<input type="number">
+</div>
+<div class="form-group">
+<label>Horario</label>
+<select>
+<option>Diurno</option>
+<option>Nocturno</option>
+<option>24H</option>
+</select>
+</div>
+</div>
+</div>
 
-      <div class="modal-body">
-        <div>
-          <h3 style="font-size:13px; font-weight:600; margin-bottom:6px;">Filtros</h3>
+<!-- ================= LOGÍSTICA ================= -->
 
-          <div style="margin-bottom:8px;">
-            <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">Tipo / configuración</div>
-            <div class="pill-group" id="tipoPills"></div>
-          </div>
+<div class="section">
+<h3 class="section-title">Logística y Costos Indirectos</h3>
+<div class="checkbox-grid">
+<label><input type="checkbox"> Transporte carga pesada</label>
+<label><input type="checkbox"> Transporte equipos</label>
+<label><input type="checkbox"> Transporte materiales</label>
+<label><input type="checkbox"> Camioneta</label>
+<label><input type="checkbox"> Alimentación</label>
+<label><input type="checkbox"> Hospedaje</label>
+<label><input type="checkbox"> Viáticos</label>
+<label><input type="checkbox"> Movilización equipo técnico</label>
+</div>
+</div>
 
-          <div style="margin-bottom:8px;">
-            <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">Marca</div>
-            <div class="pill-group" id="marcaPills"></div>
-          </div>
+<!-- ================= CONTINGENCIA ================= -->
 
-          <div class="modal-search">
-            <div style="font-size:12px; color:#6b7280;">Buscar modelo</div>
-            <input
-              type="text"
-              id="searchModelo"
-              class="modal-search-input"
-              placeholder="Escribe parte del modelo (ej: 2231, 8MP, 6KVA, etc.)"
-            />
-          </div>
-        </div>
+<div class="section">
+<h3 class="section-title">Contingencia</h3>
+<p>Incluir 1.5% del total PVP de equipos para posibles imprevistos.</p>
+</div>
 
-        <div>
-          <h3 style="font-size:13px; font-weight:600; margin-bottom:6px;">Resultados</h3>
-          <div class="camaras-grid" id="camarasGrid"></div>
-        </div>
-      </div>
+<!-- ================= GUARDIAS ================= -->
 
-      <div class="modal-footer">
-        <div>
-          <strong>Tip:</strong> Este catálogo es de ejemplo. Puedes reemplazar los modelos por tu inventario real.
-        </div>
-        <div style="font-size:11px;">
-          Toca un modelo para aplicarlo directamente en el formulario principal.
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="section">
+<h3 class="section-title">Puestos de Guardias</h3>
+<button class="btn-primary" id="btnGuardias">+ Abrir Cuadro de Guardias</button>
+<div id="resumenGuardias" class="resumen">No registrados</div>
+</div>
 
+</div>
+</div>
 
-<script src="script.js"></script>
+<!-- ================= MODAL GUARDIAS ================= -->
+
+<div class="modal" id="modalGuardias">
+<div class="modal-content">
+
+<h3>PUESTOS DE GUARDIAS</h3>
+
+<table class="table-guardias" id="tablaGuardias">
+<thead>
+<tr>
+<th>Ubicación</th>
+<th>24H</th>
+<th>12H</th>
+<th>Turno</th>
+<th>Observación</th>
+<th>Fotos</th>
+<th>Eliminar</th>
+</tr>
+</thead>
+<tbody></tbody>
+<tfoot>
+<tr class="totales">
+<td>Totales</td>
+<td id="total24">0</td>
+<td id="total12">0</td>
+<td id="totalTurno">0</td>
+<td colspan="3"></td>
+</tr>
+</tfoot>
+</table>
+
+<button class="btn-secondary" id="agregarFila">+ Nueva Fila</button>
+
+<div class="modal-actions">
+<button class="btn-secondary" id="cerrarModal">Cerrar</button>
+<button class="btn-primary" id="guardarGuardias">Guardar</button>
+</div>
+
+</div>
+</div>
+
+<script>
+
+let listaGuardias=[];
+const modal=document.getElementById("modalGuardias");
+const tbody=document.querySelector("#tablaGuardias tbody");
+
+document.getElementById("btnGuardias").onclick=()=>modal.style.display="flex";
+document.getElementById("cerrarModal").onclick=()=>modal.style.display="none";
+
+document.getElementById("agregarFila").onclick=()=>{
+const fila=document.createElement("tr");
+fila.innerHTML=`
+<td><input type="text" class="ubicacion"></td>
+<td><input type="number" class="h24" value="0"></td>
+<td><input type="number" class="h12" value="0"></td>
+<td><input type="number" class="turno" value="0"></td>
+<td><input type="text" class="obs"></td>
+<td><input type="file" multiple></td>
+<td><button onclick="eliminarFila(this)">X</button></td>
+`;
+tbody.appendChild(fila);
+};
+
+function eliminarFila(btn){
+btn.closest("tr").remove();
+calcularTotales();
+}
+
+document.addEventListener("input",e=>{
+if(e.target.classList.contains("h24")||
+e.target.classList.contains("h12")||
+e.target.classList.contains("turno")){
+calcularTotales();
+}
+});
+
+function calcularTotales(){
+let t24=0,t12=0,tTurno=0;
+document.querySelectorAll(".h24").forEach(el=>t24+=Number(el.value));
+document.querySelectorAll(".h12").forEach(el=>t12+=Number(el.value));
+document.querySelectorAll(".turno").forEach(el=>tTurno+=Number(el.value));
+document.getElementById("total24").innerText=t24;
+document.getElementById("total12").innerText=t12;
+document.getElementById("totalTurno").innerText=tTurno;
+}
+
+document.getElementById("guardarGuardias").onclick=()=>{
+listaGuardias=[];
+document.querySelectorAll("#tablaGuardias tbody tr").forEach(tr=>{
+listaGuardias.push({
+ubicacion:tr.querySelector(".ubicacion").value,
+h24:tr.querySelector(".h24").value,
+h12:tr.querySelector(".h12").value,
+turno:tr.querySelector(".turno").value,
+obs:tr.querySelector(".obs").value
+});
+});
+localStorage.setItem("puestosGuardias",JSON.stringify(listaGuardias));
+document.getElementById("resumenGuardias").innerText=
+`Registrados ${listaGuardias.length} puestos`;
+modal.style.display="none";
+};
+
+</script>
 
 </body>
 </html>
